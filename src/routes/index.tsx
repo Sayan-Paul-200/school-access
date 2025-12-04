@@ -4,9 +4,11 @@ import type { RouteObject } from "react-router";
 import { defaultRoutes } from "./default";
 import { 
     normalizePath, 
-    // generateRouterConfig
+    generateRouterConfig
  } from "./utils";
 import PublicLayout from "@/layouts/PublicLayout";
+import NotFoundPage from "@/pages/default/NotFoundPage";
+import { schoolRoutes } from "./routes.school";
 
 /**
  * Convert defaultRoutes (AppRoute[]) into RouteObject[] children for PublicLayout.
@@ -28,7 +30,7 @@ const notFound = defaultRoutes.find((r) => normalizePath(r.path) === "*");
 if (notFound) {
   publicChildren.push({
     path: "*",
-    element: notFound.element,
+    element: <NotFoundPage />,
   });
 }
 
@@ -39,11 +41,13 @@ const publicRoute: RouteObject = {
   children: publicChildren,
 };
 
+const schoolRouteObjects: RouteObject[] = generateRouterConfig([schoolRoutes])
+
 // If you have other top-level AppRoute areas (admin, teacher, etc.), convert them with generateRouterConfig
 // const otherRoutes = generateRouterConfig(otherAppRoutes); // returns RouteObject[]
 // const routerConfig = [publicRoute, ...otherRoutes];
 
-const routerConfig: RouteObject[] = [publicRoute];
+const routerConfig: RouteObject[] = [publicRoute, ...schoolRouteObjects];
 
 export const appRouter = createHashRouter(routerConfig);
 export default appRouter;
